@@ -3,6 +3,7 @@ package Car;
 import java.util.Date;
 import java.util.Random;
 
+
 public class Car implements Comparable<Car>{
     private int numberOfPassengers;
     private CarUniqueIdentifier identifier;
@@ -16,7 +17,8 @@ public class Car implements Comparable<Car>{
         identifier = new CarUniqueIdentifier();
         this.numberOfPassengers = numberOfPassengers;
         Random random = new Random();
-        hasTestNotification = random.nextBoolean();
+        // hasTestNotification = random.nextBoolean();
+        hasTestNotification = true;
         hasDoneTest = false;
         leavesTestStation = false;
         arrivesAtTestStation = false;

@@ -3,27 +3,31 @@ package Events;
 import Car.Car;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Event {
 
-    private static int queueSize = 10;
-    List<Car> carQueue = Collections.synchronizedList(new ArrayList<Car>());
+    static int queueSize = 10;
+    List<Car> carQueue;
     private static int id = 0;
 
-    public Event(){
+    public Event(List<Car> carQueue){
         this.id = id++;
+        this.carQueue = carQueue;
+    }
+
+    public Event() {
+
     }
 
     public void processEvent() throws InterruptedException {
-        System.out.println("Processing Event");
         int  index = 0;
         while(true){
             if(carQueue.size() >  0){
                 carQueue.get(index).setArrivesAtTestStation(true);
-                Car c = carQueue.get(0);
-                carQueue.remove(carQueue.get(0));
-                ArrivingAtTheTestStation testStation = new ArrivingAtTheTestStation(c);
-                testStation.arrivesAtTestSTation();
+                // ArrivingAtTheTestStation testStation = new ArrivingAtTheTestStation(c);
+                Thread t1 = new Thread(new ArrivingAtTheTestStation(carQueue),"Thread  T-2");
+                t1.start();
             }
         }
     }
@@ -45,8 +49,8 @@ public class Event {
      * @return Car
      */
     public Car removeFromQueue() {
-        if(carQueue.size() > 0) {
-           Car car = carQueue.remove(carQueue.size()-1);
+        if(carQueue != null &&carQueue.size() > 0) {
+           Car car = carQueue.remove(0);
            Collections.sort(carQueue);
            if(car.getHasTestNotification())
                return  car;

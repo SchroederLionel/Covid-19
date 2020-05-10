@@ -2,26 +2,30 @@ package Events;
 
 import Car.Car;
 
-public class LeavingTheTestStation extends Event {
+public class LeavingTheTestStation extends Event implements Runnable {
     private Car car;
-    public LeavingTheTestStation(Car car) {
-        this.car = car;
+    public LeavingTheTestStation(Car c) {
+        this.car = c;
     }
 
-    public boolean leavingTestStation() {
-        if(this.getCar().getHasDoneTest() && this.getCar().getArrivesAtTestStation()){
+
+    public void leavingTestStation() {
+        if(this.car != null && this.getCar().getHasDoneTest() && this.getCar().getArrivesAtTestStation()){
             this.getCar().setLeavesTestStation(true);
-            System.out.println("Car with the id: "+this.car.getIdentifier().getCarId() +" leaves the test station.");
-            return true;
+            System.out.println("5. Leaves the test station: "+this.car.getIdentifier().getCarId() );
+            car = null;
         }
-        return false;
+
+
     }
 
     public Car getCar() {
         return car;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
+
+    @Override
+    public void run() {
+            leavingTestStation();
     }
 }
