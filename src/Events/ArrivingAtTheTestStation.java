@@ -1,8 +1,10 @@
 package Events;
 
 import Car.Car;
+import Times.Times;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,17 +20,25 @@ public class ArrivingAtTheTestStation extends Event implements Runnable{
         int max = 5;
         int min = 1;
         int range = max - min + 1;
-        for(int i = 0; i < 3 ; i++){
+        Times.calculateTimeDistributionForArrivingAtTheCarStation();
+        long time = System.currentTimeMillis();
+        long timeTo = System.currentTimeMillis() + 7200;
+        System.out.println(timeTo);
+        while(time <= timeTo){
+            Thread.sleep(Times.calculateTimeDistributionForArrivingAtTheCarStation());
             int res = (int) ( Math.random()*range)+min;
             Car c = new Car(res);
             if(carQueue.size() > 10) {
                 System.out.println("0. Car queue is to hight and needs to leave: " + c.getIdentifier().getCarId() );
             }else {
                 c.setArrivesAtTestStation(true);
-                this.carQueue.add(c);
+                carQueue.add(c);
                 Collections.sort(carQueue);
                 System.out.println("1. Arrives at the Teststation: " + c.getIdentifier().getCarId() );
             }
+
+            time = System.currentTimeMillis();
+            System.out.println(time + " : " + (timeTo-time));
         }
     }
 

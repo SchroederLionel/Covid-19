@@ -17,8 +17,8 @@ public class Car implements Comparable<Car>{
         identifier = new CarUniqueIdentifier();
         this.numberOfPassengers = numberOfPassengers;
         Random random = new Random();
-        // hasTestNotification = random.nextBoolean();
-        hasTestNotification = true;
+        hasTestNotification = random.nextBoolean();
+        // hasTestNotification = true;
         hasDoneTest = false;
         leavesTestStation = false;
         arrivesAtTestStation = false;

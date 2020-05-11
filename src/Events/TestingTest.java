@@ -1,6 +1,7 @@
 package Events;
 
 import Car.Car;
+import Times.Times;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,24 +17,22 @@ public class TestingTest implements Runnable{
         this.isTestingStationEmpty = isTestingStationEmpty;
     }
     public  void testingThePatient() throws InterruptedException {
+        synchronized (isTestingStationEmpty){
+            if(this.carQueue.size()>0){
+                // sleep
+                if(carQueue != null && carQueue.size() > 0){
+                    Car c = carQueue.remove(0);
+                    System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
+                    Thread.sleep(Times.testForCovid*c.getNumberOfPassengers());
+                    c.setHasDoneTest(true);
+                    Collections.sort(carQueue);
+                    LeavingTheTestStation leavingTheTestStation  = new LeavingTheTestStation(c);
+                    leavingTheTestStation.leavingTestStation();
+                    isTestingStationEmpty.set(false);
 
-        while(this.carQueue.size()>0){
-            Thread.sleep(3000);
-            if(carQueue != null && carQueue.size() > 0){
-                Car c = carQueue.get(0);
-                System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
-                Thread.sleep(10000);
-                c.setHasDoneTest(true);
-                carQueue.remove(0);
-                Collections.sort(carQueue);
-                isTestingStationEmpty.set(false);
-                LeavingTheTestStation leavingTheTestStation  = new LeavingTheTestStation(c);
-                leavingTheTestStation.leavingTestStation();
+                }
             }
         }
-
-
-
     }
 
     @Override

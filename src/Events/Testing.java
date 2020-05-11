@@ -1,7 +1,9 @@
 package Events;
 
 import Car.Car;
+import Times.Times;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,22 +17,48 @@ public class Testing extends Event implements Runnable{
         this.isTestingStationEmpty = isHandInStationEmpty;
     }
     public void handInPapers() throws InterruptedException {
-        int i = 0;
-        while(this.carQueue.size()>0){
-            if(carQueue.size() == 1) i =0;
-            Car c = carQueue.get(i);
-            System.out.println("2. Hands in Test Notentification to Employee :"+c.getIdentifier().getCarId());
+        int i = carQueue.size();
+        int k = 0;
+
+        while(this.carQueue.size() > 0){
+
+            System.out.println("2. Driver hands in the papers: "+carQueue.get(0).getIdentifier().getCarId());
+            Thread.sleep(Times.calculateTimeDistributionForHandingInTestNotentification());
+
             while(isTestingStationEmpty.get()){
-                Thread.sleep(4000);
-                System.out.println(" "+c.getIdentifier().getCarId() +" : is waiting to drive to the test station.");
+                if(k == 0) {
+                    if(carQueue.size() > 1)
+                        System.out.println(""+carQueue.get(0).getIdentifier().getCarId() +" : is waiting to drive to the test station.");
+                    k++;
+                }
             }
-            i=0;
+
             if(carQueue != null && carQueue.size() > 0){
-                System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
-                isTestingStationEmpty.set(true);
-                Thread t3 = new Thread(new TestingTest(carQueue,isTestingStationEmpty));
-                t3.start();
-                i++;
+                Car c = carQueue.get(0);
+                if(c.getHasTestNotification()) {
+                    isTestingStationEmpty.set(true);
+                    System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
+                    Thread t3 = new Thread(new TestingTest(carQueue,isTestingStationEmpty));
+                    t3.start();
+                    while(i == carQueue.size()){
+                        Thread.sleep(1);
+                    }
+                    i = carQueue.size();
+                    while(!isTestingStationEmpty.get()){
+                       Thread.sleep(1);
+                    }
+                    if(carQueue.size() == 0){
+                        break;
+                    }
+                }
+                else {
+                    System.out.println("2A.  Car does not have the papers and leaves the queue :"+c.getIdentifier().getCarId());
+                    carQueue.remove(0);
+                    Collections.sort(carQueue);
+                }
+
+
+
             }
         }
     }
