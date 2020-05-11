@@ -16,20 +16,24 @@ public class TestingTest implements Runnable{
         this.carQueue = carQueue;
         this.isTestingStationEmpty = isTestingStationEmpty;
     }
+
+    /**
+     * Function which allows to test a patient.
+     * Removes the car from the car queue so that a car can join again the waiting queue.
+     */
     public  void testingThePatient() throws InterruptedException {
         synchronized (isTestingStationEmpty){
             if(this.carQueue.size()>0){
-                // sleep
                 if(carQueue != null && carQueue.size() > 0){
                     Car c = carQueue.remove(0);
-                    System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
+                    if(Times.enableDebugging)
+                        System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
                     Thread.sleep(Times.testForCovid*c.getNumberOfPassengers());
                     c.setHasDoneTest(true);
                     Collections.sort(carQueue);
                     LeavingTheTestStation leavingTheTestStation  = new LeavingTheTestStation(c);
                     leavingTheTestStation.leavingTestStation();
                     isTestingStationEmpty.set(false);
-
                 }
             }
         }

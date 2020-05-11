@@ -1,25 +1,32 @@
 package Events;
 
 import Car.Car;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import Times.Times;
 
 public class LeavingTheTestStation extends Event implements Runnable {
+    // Car which is leaving the test station.
     private Car car;
-    static int carLeft = 0;
+    // Car which left the system after getting tested.
+    public static int carLeft = 0;
+    // Counts the numbers of passengers per car which are leaving the test station.
+    public static int personsInCar =0;
     public LeavingTheTestStation(Car c) {
         this.car = c;
         carLeft++;
+        personsInCar += c.getNumberOfPassengers();
     }
 
+    /**
+     * Function which allows a car to leave the teststation.
+     * Checks if the car has done the test and has handed in the the papers.
+     */
     public void leavingTestStation() {
         if(this.car != null && this.getCar().getHasDoneTest() && this.getCar().getArrivesAtTestStation()){
             this.getCar().setLeavesTestStation(true);
-            System.out.println("5. Leaves the test station: "+this.car.getIdentifier().getCarId() +"Number of Car left:" +carLeft);
+            if(Times.enableDebugging)
+                System.out.println("5. Leaves the test station: "+this.car.getIdentifier().getCarId());
             car = null;
         }
-
-
     }
 
     public Car getCar() {

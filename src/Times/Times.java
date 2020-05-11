@@ -6,7 +6,7 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 import java.util.Random;
 
 public class Times {
-
+    public static boolean enableDebugging = true;
     public static long carGeneratingTimer = 7200;
 
     public static long arrivingMax = 120;
@@ -30,6 +30,10 @@ public class Times {
 
         testForCovid =  testForCovid/multiplicator;
 
+    }
+
+    public static void changeDebugginMod() {
+        enableDebugging = !enableDebugging;
     }
 
 
