@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Class which allows to Hand in the papers and checks if they are valid or not.
+ */
 public class Testing extends Event implements Runnable{
     private List<Car> carQueue = null;
     private AtomicBoolean isTestingStationEmpty = null;
@@ -19,15 +22,33 @@ public class Testing extends Event implements Runnable{
 
     /**
      * Function which allows to check if the driver has the appropriate Papers.
+     * Creates a new Thread each time a driver has handed in the papers for furtherprocedure. In this case the actual testing phase.
      * @throws InterruptedException
      */
-    public void handInPapers() throws InterruptedException {
+    public  void handInPapers() throws InterruptedException {
         int i = carQueue.size();
         int k = 0;
+        int checkIfTheSame = 0;
+        long timeMillis =  System.currentTimeMillis()+Times.carGeneratingTimer;
 
-        while(this.carQueue.size() > 0){
-            if(Times.enableDebugging)
-                System.out.println("2. Driver hands in the papers: "+carQueue.get(0).getIdentifier().getCarId());
+        while(carQueue.size() == 0){}
+        while(carQueue.size() > 0  || System.currentTimeMillis() <= timeMillis ){
+            Car saver = null;
+            synchronized (carQueue) {
+                if(carQueue.size()==1){
+                    checkIfTheSame=0;
+                }
+                if (!carQueue.get(checkIfTheSame).getCurrentStation().contains("Hands")) {
+                    carQueue.get(checkIfTheSame).setCurrentStation("Hands in papers");
+                    saver = carQueue.get(checkIfTheSame);
+                }
+
+
+                if (Times.enableDebugging)
+                    System.out.println("2. Driver hands in the papers: " + carQueue.get(0).getIdentifier().getCarId());
+            }
+
+
             Thread.sleep(Times.calculateTimeDistributionForHandingInTestNotentification());
 
             while(isTestingStationEmpty.get()){
@@ -43,17 +64,15 @@ public class Testing extends Event implements Runnable{
                 Car c = carQueue.get(0);
                 if(c.getHasTestNotification()) {
                     isTestingStationEmpty.set(true);
-                    if(Times.enableDebugging)
-                        System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
+                    //if(Times.enableDebugging)
+                    System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
                     Thread t3 = new Thread(new TestingTest(carQueue,isTestingStationEmpty));
                     t3.start();
-                    while(i == carQueue.size()){
-                        Thread.sleep(1);
-                    }
-                    i = carQueue.size();
-                    while(!isTestingStationEmpty.get()){
-                       Thread.sleep(1);
-                    }
+                    if(saver == carQueue.get(0))
+                    {
+                        checkIfTheSame =1;
+                    }else checkIfTheSame =0;
+
                     if(carQueue.size() == 0){
                         break;
                     }
@@ -61,8 +80,10 @@ public class Testing extends Event implements Runnable{
                 else {
                     if(Times.enableDebugging)
                         System.out.println("2A.  Car does not have the papers and leaves the queue :"+c.getIdentifier().getCarId());
-                    carQueue.remove(0);
-                    Collections.sort(carQueue);
+
+                    synchronized (carQueue){
+                        carQueue.remove(0);
+                        Collections.sort(carQueue);}
                 }
 
 

@@ -3,11 +3,11 @@ package Events;
 import Car.Car;
 import Times.Times;
 
-
-import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class which allows to generate cars. Whenever the queue hits its limit the car gets directly dequeued.
+ */
 public class ArrivingAtTheTestStation extends Event implements Runnable{
     private List<Car> carQueue = null;
 
@@ -32,7 +32,7 @@ public class ArrivingAtTheTestStation extends Event implements Runnable{
         int max = 5;
         int min = 1;
         int range = max - min + 1;
-        Times.calculateTimeDistributionForArrivingAtTheCarStation();
+
         long time = System.currentTimeMillis();
         long timeTo = System.currentTimeMillis() + 7200;
         while(time <= timeTo){
@@ -41,14 +41,16 @@ public class ArrivingAtTheTestStation extends Event implements Runnable{
             Car c = new Car(res);
             personsInCar += c.getNumberOfPassengers();
             carGenerated++;
-            if(carQueue.size() > Times.carQueueSize) {
+            if(carQueue.size() >= 10) {
                 if(Times.enableDebugging)
                     System.out.println("0. Car queue is to hight and needs to leave: " + c.getIdentifier().getCarId() );
                 carLeftLaneSinceItIsFull++;
             }else {
                 c.setArrivesAtTestStation(true);
-                carQueue.add(c);
-                Collections.sort(carQueue);
+                c.setCurrentStation("Arrives Test Station");
+                synchronized (carQueue){
+                    carQueue.add(c);}
+                // Collections.sort(carQueue);
                 if(Times.enableDebugging)
                     System.out.println("1. Arrives at the Teststation: " + c.getIdentifier().getCarId() );
             }

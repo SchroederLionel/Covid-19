@@ -11,7 +11,8 @@ public class Car implements Comparable<Car>{
     private boolean hasDoneTest;
     private boolean leavesTestStation;
     private boolean arrivesAtTestStation;
-    private String timeStamp;
+    public String timeStamp;
+    private String currentStation;
 
     public Car(int numberOfPassengers) {
         identifier = new CarUniqueIdentifier();
@@ -22,9 +23,17 @@ public class Car implements Comparable<Car>{
         hasDoneTest = false;
         leavesTestStation = false;
         arrivesAtTestStation = false;
-        timeStamp = new Date().toString();
+        timeStamp = String.valueOf(System.currentTimeMillis());
+        currentStation ="Waiting Lane";
     }
 
+    public String getCurrentStation() {
+        return currentStation;
+    }
+
+    public synchronized  void setCurrentStation(String stationName){
+        this.currentStation = stationName;
+    }
     public int getNumberOfPassengers() {
         return numberOfPassengers;
     }

@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Class which allows to Test the inmates of a car.
+ */
 public class TestingTest implements Runnable{
     private List<Car> carQueue = null;
     private AtomicBoolean isTestingStationEmpty;
@@ -24,13 +27,20 @@ public class TestingTest implements Runnable{
     public  void testingThePatient() throws InterruptedException {
         synchronized (isTestingStationEmpty){
             if(this.carQueue.size()>0){
+
                 if(carQueue != null && carQueue.size() > 0){
-                    Car c = carQueue.remove(0);
+                    carQueue.get(0).setCurrentStation("Is getting tested");
+                    Car c = carQueue.get(0);
                     if(Times.enableDebugging)
                         System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
+
                     Thread.sleep(Times.testForCovid*c.getNumberOfPassengers());
+
+                    synchronized (carQueue){
+                        carQueue.remove(0);
+                        Collections.sort(carQueue);
+                    }
                     c.setHasDoneTest(true);
-                    Collections.sort(carQueue);
                     LeavingTheTestStation leavingTheTestStation  = new LeavingTheTestStation(c);
                     leavingTheTestStation.leavingTestStation();
                     isTestingStationEmpty.set(false);

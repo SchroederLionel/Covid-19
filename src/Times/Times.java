@@ -3,11 +3,14 @@ package Times;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Times {
+    public static AtomicInteger carsCurrentlyInTheSystem = new AtomicInteger(0);
+    public static long currentTimeMillis = System.currentTimeMillis();
+    public static boolean seeHowManyCarsAreInTheSystem =true;
     public static int carQueueSize = 10;
-    public static boolean enableDebugging = true;
+    public static boolean enableDebugging = false;
     public static long carGeneratingTimer = 7200;
 
     public static long arrivingMax = 120;
@@ -49,6 +52,27 @@ public class Times {
     public static long calculateTimeDistributionForHandingInTestNotentification() {
         UniformRealDistribution u = new UniformRealDistribution(arrivingMin,arrivingMax);
         return (long) u.sample();
+    }
+
+    /**
+     * Function which allows to increment the cars in the system by 1.
+     */
+    public static void increment() {
+        carsCurrentlyInTheSystem.set(carsCurrentlyInTheSystem.get()+1);
+    }
+
+    /**
+     * Function which allows to decrease the cars in the system by 1.
+     */
+    public static void decrement() {
+        carsCurrentlyInTheSystem.set(carsCurrentlyInTheSystem.get()-1);
+    }
+
+    /**
+     * Function which allows to disable viewing how many cars are in the system.
+     */
+    public static void dontWatchCurrentCars() {
+        seeHowManyCarsAreInTheSystem = false;
     }
 
 
