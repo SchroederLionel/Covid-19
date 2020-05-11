@@ -20,7 +20,12 @@ public class Simulation {
         List<Car> carQueue = Collections.synchronizedList(new ArrayList<Car>());
         AtomicBoolean isTestingStationEmpty = new AtomicBoolean(false);
 
+        // Change integer value to set queue size;
+        Times.setCarQueueSize(10);
+        // Comment to see whats going on in the system.
         Times.changeDebugginMod();
+
+
         Thread t1 = new Thread(new ArrivingAtTheTestStation(carQueue),"Thread T-1");
         t1.start();
 

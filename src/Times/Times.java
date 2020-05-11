@@ -6,6 +6,7 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 import java.util.Random;
 
 public class Times {
+    public static int carQueueSize = 10;
     public static boolean enableDebugging = true;
     public static long carGeneratingTimer = 7200;
 
@@ -17,7 +18,9 @@ public class Times {
 
     public static long testForCovid = 240;
 
-
+    public static void setCarQueueSize(int number) {
+        carQueueSize = number;
+    }
     public static void setTimeFaster(long multiplicator) {
 
         carGeneratingTimer = carGeneratingTimer/multiplicator;
