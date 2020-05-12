@@ -54,8 +54,11 @@ public class Testing extends Event implements Runnable{
             while(isTestingStationEmpty.get()){
                 if(k == 0) {
                     if(carQueue.size() > 1)
-                        if(Times.enableDebugging)
+                        if(Times.enableDebugging) {
                             System.out.println(""+carQueue.get(0).getIdentifier().getCarId() +" : is waiting to drive to the test station.");
+
+
+                        }
                     k++;
                 }
             }
@@ -64,8 +67,8 @@ public class Testing extends Event implements Runnable{
                 Car c = carQueue.get(0);
                 if(c.getHasTestNotification()) {
                     isTestingStationEmpty.set(true);
-                    //if(Times.enableDebugging)
-                    System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
+                    if(Times.enableDebugging)
+                        System.out.println("3. Drives to the Teststation for Covid19 : "+c.getIdentifier().getCarId());
                     Thread t3 = new Thread(new TestingTest(carQueue,isTestingStationEmpty));
                     t3.start();
                     if(saver == carQueue.get(0))

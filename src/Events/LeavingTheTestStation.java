@@ -21,13 +21,16 @@ public class LeavingTheTestStation extends Event implements Runnable {
      * Checks if the car has done the test and has handed in the the papers.
      */
     public void leavingTestStation() {
-            if (this.car != null && this.getCar().getHasDoneTest() && this.getCar().getArrivesAtTestStation()) {
-                this.getCar().setLeavesTestStation(true);
-                if (Times.enableDebugging)
-                    System.out.println("5. Leaves the test station: " + this.car.getIdentifier().getCarId());
-                car = null;
-                Times.decrement();
-            }
+        if (this.car != null && this.getCar().getHasDoneTest() && this.getCar().getArrivesAtTestStation()) {
+            this.getCar().setLeavesTestStation(true);
+            if (Times.enableDebugging)
+                System.out.println("5. Leaves the test station: " + this.car.getIdentifier().getCarId());
+
+            Times.timesList.add(car);
+            //System.out.println("Car was waiting: "+car.getIdentifier().getCarId()+" : "+ (car.getStopsWaiting() - car.getStartsWaiting()));
+            car = null;
+            Times.decrement();
+        }
 
     }
 
@@ -38,6 +41,6 @@ public class LeavingTheTestStation extends Event implements Runnable {
 
     @Override
     public void run() {
-            leavingTestStation();
+        leavingTestStation();
     }
 }

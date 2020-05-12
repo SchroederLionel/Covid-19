@@ -41,12 +41,13 @@ public class ArrivingAtTheTestStation extends Event implements Runnable{
             Car c = new Car(res);
             personsInCar += c.getNumberOfPassengers();
             carGenerated++;
-            if(carQueue.size() >= 10) {
+            if(carQueue.size() >= Times.carQueueSize) {
                 if(Times.enableDebugging)
                     System.out.println("0. Car queue is to hight and needs to leave: " + c.getIdentifier().getCarId() );
                 carLeftLaneSinceItIsFull++;
             }else {
                 c.setArrivesAtTestStation(true);
+                c.setStartsWaiting(System.currentTimeMillis());
                 c.setCurrentStation("Arrives Test Station");
                 synchronized (carQueue){
                     carQueue.add(c);}

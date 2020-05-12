@@ -1,11 +1,19 @@
 package Times;
 
-import org.apache.commons.math3.distribution.NormalDistribution;
-import org.apache.commons.math3.distribution.UniformRealDistribution;
 
+
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.math3.distribution.UniformRealDistribution;
+
+import Car.Car;
+
 public class Times {
+
+    public static List<Car> timesList = new ArrayList<>();
     public static AtomicInteger carsCurrentlyInTheSystem = new AtomicInteger(0);
     public static long currentTimeMillis = System.currentTimeMillis();
     public static boolean seeHowManyCarsAreInTheSystem =true;

@@ -31,6 +31,7 @@ public class TestingTest implements Runnable{
                 if(carQueue != null && carQueue.size() > 0){
                     carQueue.get(0).setCurrentStation("Is getting tested");
                     Car c = carQueue.get(0);
+                    c.setStopsWaiting(System.currentTimeMillis());
                     if(Times.enableDebugging)
                         System.out.println("4. Is getting Tested :"+c.getIdentifier().getCarId());
 

@@ -13,6 +13,8 @@ public class Car implements Comparable<Car>{
     private boolean arrivesAtTestStation;
     public String timeStamp;
     private String currentStation;
+    private long startsWaiting;
+    private long stopsWaiting;
 
     public Car(int numberOfPassengers) {
         identifier = new CarUniqueIdentifier();
@@ -76,6 +78,23 @@ public class Car implements Comparable<Car>{
 
     public void setArrivesAtTestStation(boolean arrivesAtTestStation) {
         this.arrivesAtTestStation = arrivesAtTestStation;
+    }
+
+
+    public long getStartsWaiting() {
+        return startsWaiting;
+    }
+
+    public void setStartsWaiting(long startsWaiting) {
+        this.startsWaiting = startsWaiting;
+    }
+
+    public long getStopsWaiting() {
+        return stopsWaiting;
+    }
+
+    public void setStopsWaiting(long stopsWaiting) {
+        this.stopsWaiting = stopsWaiting;
     }
 
     @Override
